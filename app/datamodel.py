@@ -135,7 +135,7 @@ def get_words(session_id=None, learned=None):
             session_id = session.query(func.max(Vocabulary.session_id)).scalar()
             if session_id is None:
                 print("No sessions available to play.")
-                return []
+                return 0, []
 
         # Construire la requête de base
         query = session.query(Vocabulary).filter(Vocabulary.session_id == session_id)
@@ -149,9 +149,9 @@ def get_words(session_id=None, learned=None):
 
         if not words:
             print(f"No words found for session_id {session_id}{' and learned=' + str(learned) if learned is not None else ''}.")
-            return []
+            return 0, []
         else:
-            return words
+            return session_id, words
 
     except Exception as e:
         print(f"An error occurred: {e}")

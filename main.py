@@ -114,7 +114,7 @@ def play_session():
     else:
         session_id = None
 
-    words = get_words(session_id)
+    session_id, words = get_words(session_id)
 
     print(f"Playing session with ID: {session_id} Press 'stop' to stop.\n")
 
