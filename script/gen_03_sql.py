@@ -14,6 +14,9 @@ def read_csv_folder(dir_path):
             with open(input_dir_path, mode='r', encoding='utf-8') as fichier:
                 lecteur_csv = csv.reader(fichier, delimiter=',')
 
+                # Sauter la première ligne (en-tête)
+                next(lecteur_csv)
+
                 # Itération sur chaque ligne
                 for ligne in lecteur_csv:
                     if len(ligne) >= 2:  # Vérifie que la ligne a au moins 2 colonnes
