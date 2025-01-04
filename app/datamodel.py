@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, Boolean
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
@@ -15,6 +15,7 @@ class Vocabulary(Base):
     french_word = Column(String(255), nullable=False)
     english_word = Column(String(255), nullable=False)
     session_id = Column(Integer, nullable=True)
+    learned = Column(Boolean, nullable=True)
 
 # Créer le moteur SQLAlchemy
 def get_engine():
