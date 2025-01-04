@@ -1,0 +1,6 @@
+USE english_schema;
+SET SQL_SAFE_UPDATES = 0;
+DELETE FROM vocabulary;
+ALTER TABLE vocabulary AUTO_INCREMENT = 1;
+SET SQL_SAFE_UPDATES = 1;
+

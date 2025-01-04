@@ -1,0 +1,4 @@
+USE english_schema;
+SET SQL_SAFE_UPDATES = 0;
+DROP TABLE vocabulary;
+SET SQL_SAFE_UPDATES = 1;

@@ -4,6 +4,7 @@ from app.datamodel import (
     make_session,
     reset_learning,
     reset_session,
+    set_learned,
 )
 
 def quiz():
@@ -71,6 +72,9 @@ def main_reset_learning():
 
 
 def random_play():
+
+    good_answer = 0
+    bad_answer = 0
     while True:
         print("Random play started\n Press 'stop' to stop.\n")
 
@@ -90,8 +94,12 @@ def random_play():
 
         # Vérification de la réponse
         if word_user_input.lower() == word.english_word.lower():
+            good_answer += 1
+            set_learned(word, True)
             print("Great ! 🎉\n")
         else:
+            bad_answer += 1
+            set_learned(word, False)
             print(f"Fail. The correct answer was : {word.english_word}.\n")
 
 
@@ -124,11 +132,13 @@ def play_session():
 
         # Vérification de la réponse
         if word_user_input.lower() == word.english_word.lower():
-            print("Great! 🎉\n")
             good_answer += 1
+            set_learned(word, True)
+            print("Great! 🎉\n")
         else:
-            print(f"Fail. The correct answer was : {word.english_word}.\n")
             bad_answer += 1
+            set_learned(word, False)
+            print(f"Fail. The correct answer was : {word.english_word}.\n")
 
     print(f"Session ended with {good_answer}/{good_answer + bad_answer}")
 

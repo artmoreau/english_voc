@@ -152,6 +152,22 @@ def get_words(session_id=None):
         session.close()
 
 
+def set_learned(vocabulary_obj, learned):
+    session = get_session()
+
+    try:
+        # Mettre à jour la colonne learned pour l'objet donné
+        session.query(Vocabulary).filter(Vocabulary.id == vocabulary_obj.id).update({Vocabulary.learned: learned})
+
+        # Sauvegarder les modifications
+        session.commit()
+
+    except Exception as e:
+        session.rollback()
+        print(f"An error occurred: {e}")
+    finally:
+        session.close()
+
 # Créer la table (si elle n'existe pas déjà)
 if __name__ == "__main__":
     word = get_random_word()
