@@ -154,7 +154,7 @@ def play_session():
             good_answer = 0
             bad_answer = 0
 
-            words = get_words(session_id, False)
+            session_id, words = get_words(session_id, False)
 
             for word in words:
 

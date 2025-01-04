@@ -29,7 +29,6 @@ INSERT INTO english_schema.vocabulary (french_word, english_word) VALUES
 ("Merci", "Thanks"),
 ("S'il vous plaît", "Please"),
 ("Pardon", "Sorry"),
-("Arrête", "Stop"),
 ("Attention", "Caution"),
 ("oui", "yes"),
 ("non", "no"),
@@ -98,10 +97,10 @@ INSERT INTO english_schema.vocabulary (french_word, english_word) VALUES
 ("tout droit", "straight ahead"),
 ("retour", "back"),
 ("le prénom", "first name"),
-("le nom de famille", "last name");
+("le nom de famille", "last name"),
+("l’adresse", "address");
 
 INSERT INTO english_schema.vocabulary (french_word, english_word) VALUES
-("l’adresse", "address"),
 ("le pays", "country"),
 ("le lieu de naissance", "place of birth"),
 ("la date de naissance", "date of birth"),
@@ -200,9 +199,9 @@ INSERT INTO english_schema.vocabulary (french_word, english_word) VALUES
 ("chercher", "to search"),
 ("téléphoner", "to call"),
 ("boire", "to drink"),
-("savoir", "to know");
+("savoir", "to know"),
+("vouloir", "to want");
 
 INSERT INTO english_schema.vocabulary (french_word, english_word) VALUES
-("vouloir", "to want"),
 ("payer", "to pay");
 

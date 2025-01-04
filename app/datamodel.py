@@ -54,6 +54,24 @@ def del_english_word(english_word: str) -> int:
     return deleted_rows
 
 
+def edit_word(french_word: str, new_english_translation: str) -> int:
+    session = get_session()
+    word_entry = session.query(Vocabulary).filter(Vocabulary.french_word == french_word).first()
+
+    # Si le mot est trouvé, on met à jour sa traduction anglaise
+    if word_entry:
+        word_entry.english_word = new_english_translation
+        session.commit()  # Valider la mise à jour dans la base de données
+        updated_rows = 1  # Un mot a été mis à jour
+    else:
+        updated_rows = 0  # Aucun mot trouvé pour la mise à jour
+
+    # Fermer la session
+    session.close()
+
+    return updated_rows
+
+
 def get_random_word():
     session = get_session()
     word = session.query(Vocabulary).order_by(func.rand()).first()
