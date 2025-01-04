@@ -1,9 +1,9 @@
-import random
 from app.datamodel import (
     get_random_word,
-    make_session,
-    reset_session,
     get_words,
+    make_session,
+    reset_learning,
+    reset_session,
 )
 
 def quiz():
@@ -57,17 +57,17 @@ def main_reset_session():
         reset_session()
 
 
-def reset_learning():
-    session_id = input("Enter the session_id to reset (or press Enter to reset all): ").strip()
+def main_reset_learning():
+    session_id = input("Enter the session_id to reset learned (or press Enter to reset all): ").strip()
     if session_id:
         try:
             session_id = int(session_id)
         except ValueError:
             print("Invalid session_id. Please enter a valid integer. Nothing is done")
         else:
-            reset_session(session_id=session_id)
+            reset_learning(session_id=session_id)
     else:
-        reset_session()
+        reset_learning()
 
 
 def random_play():

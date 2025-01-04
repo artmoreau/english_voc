@@ -103,6 +103,28 @@ def reset_session(session_id=None):
         session.close()
 
 
+def reset_learning(session_id=None):
+    session = get_session()
+
+    try:
+        if session_id is None:
+            # Mettre tous les session_id à None
+            session.query(Vocabulary).update({Vocabulary.learned: None})
+        else:
+            # Mettre à None uniquement les learned correspondant au session_id en argument
+            session.query(Vocabulary).filter(Vocabulary.session_id == session_id).update({Vocabulary.learbed: None})
+
+        # Sauvegarder les modifications
+        session.commit()
+
+        print(f"Learned reset to None{' for session_id ' + str(session_id) if session_id is not None else ''}.")
+    except Exception as e:
+        session.rollback()
+        print(f"An error occurred: {e}")
+    finally:
+        session.close()
+
+
 def get_words(session_id=None):
     session = get_session()
 
