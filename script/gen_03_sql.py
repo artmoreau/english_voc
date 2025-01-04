@@ -2,32 +2,28 @@ import os
 import csv
 
 
-input_dir_path = "C:\\Users\\arthur\\Documents\\English_voc"
-output_sql_path = "C:\\Users\\arthur\\PycharmProjects\\english\\data\\03_feed_table_voc.sql"
+input_dir_path = "C:\\Users\\arthur\\Documents\\English_voc\\all\\all_word.csv"
+output_sql_path = "C:\\Users\\arthur\\PycharmProjects\\english_voc\\data\\03_feed_table_voc.sql"
 
 
 def read_csv_folder(dir_path):
     fr = []
     en = []
-    for csv_file in os.listdir(dir_path):
-        csv_file_path = os.path.join(dir_path, csv_file)
-        if os.path.isfile(csv_file_path) and csv_file_path.endswith(".csv"):
+    if os.path.isfile(input_dir_path) and input_dir_path.endswith(".csv"):
+        try:
+            with open(input_dir_path, mode='r', encoding='utf-8') as fichier:
+                lecteur_csv = csv.reader(fichier, delimiter=',')
 
-            try:
-                with open(csv_file_path, mode='r', encoding='utf-8') as fichier:
-                    lecteur_csv = csv.reader(fichier, delimiter=';')
+                # Itération sur chaque ligne
+                for ligne in lecteur_csv:
+                    if len(ligne) >= 2:  # Vérifie que la ligne a au moins 2 colonnes
+                        fr.append(ligne[0])  # Ajoute la 1ère colonne à la liste
+                        en.append(ligne[1])  # Ajoute la 2ème colonne à la liste
 
-                    # Itération sur chaque ligne
-                    for ligne in lecteur_csv:
-                        if len(ligne) >= 2:  # Vérifie que la ligne a au moins 2 colonnes
-                            fr.append(ligne[0])  # Ajoute la 1ère colonne à la liste
-                            en.append(ligne[1])  # Ajoute la 2ème colonne à la liste
-
-
-            except FileNotFoundError:
-                print(f"Le fichier '{csv_file_path}' n'a pas été trouvé.")
-            except Exception as e:
-                print(f"Une erreur s'est produite : {e}")
+        except FileNotFoundError:
+            print(f"Le fichier '{input_dir_path}' n'a pas été trouvé.")
+        except Exception as e:
+            print(f"Une erreur s'est produite : {e}")
 
     return fr, en
 

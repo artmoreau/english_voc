@@ -126,7 +126,7 @@ def reset_learning(session_id=None):
         session.close()
 
 
-def get_words(session_id=None):
+def get_words(session_id=None, learned=None):
     session = get_session()
 
     try:
@@ -137,15 +137,21 @@ def get_words(session_id=None):
                 print("No sessions available to play.")
                 return []
 
-        # Récupérer les mots du session_id
-        words = session.query(Vocabulary).filter(Vocabulary.session_id == session_id).all()
+        # Construire la requête de base
+        query = session.query(Vocabulary).filter(Vocabulary.session_id == session_id)
+
+        # Ajouter le filtre pour 'learned' si spécifié
+        if learned is not None:
+            query = query.filter(Vocabulary.learned == learned)
+
+        # Exécuter la requête
+        words = query.all()
 
         if not words:
-            print(f"No words found for session_id {session_id}.")
+            print(f"No words found for session_id {session_id}{' and learned=' + str(learned) if learned is not None else ''}.")
             return []
         else:
             return words
-
 
     except Exception as e:
         print(f"An error occurred: {e}")

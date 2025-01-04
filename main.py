@@ -142,6 +142,42 @@ def play_session():
 
     print(f"Session ended with {good_answer}/{good_answer + bad_answer}")
 
+    while bad_answer > 0:
+        print(f"Would you like to retry incorrect words ? press y/yes/nothing or n/no:")
+        user_input = input().strip()
+
+        if user_input.lower() in ("n", "no"):
+            print("Thanks for playing! Session play ended.")
+
+        else:
+            print(f"Restart wrong word")
+            good_answer = 0
+            bad_answer = 0
+
+            words = get_words(session_id, False)
+
+            for word in words:
+
+                print(f"Let's translate this : {word.french_word}")
+                word_user_input = input("Your answer : ").strip()
+
+                # Permet de quitter le quiz
+                if word_user_input.lower() == "stop":
+                    print("Thanks for playing! Session play ended.")
+                    break
+
+                # Vérification de la réponse
+                if word_user_input.lower() == word.english_word.lower():
+                    good_answer += 1
+                    set_learned(word, True)
+                    print("Great! 🎉\n")
+                else:
+                    bad_answer += 1
+                    set_learned(word, False)
+                    print(f"Fail. The correct answer was : {word.english_word}\n")
+
+            print(f"Session ended with {good_answer}/{good_answer + bad_answer}")
+
 
 def end():
     print("Thanks for playing ! Bye.")

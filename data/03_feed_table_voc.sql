@@ -1,4 +1,5 @@
 INSERT INTO english_schema.vocabulary (french_word, english_word) VALUES
+("french", "english"),
 ("bon(ne)", "good"),
 ("mauvais(e)", "bad"),
 ("nouveau/nouvelle", "new"),
@@ -97,15 +98,15 @@ INSERT INTO english_schema.vocabulary (french_word, english_word) VALUES
 ("à gauche", "left"),
 ("tout droit", "straight ahead"),
 ("retour", "back"),
-("le prénom", "first name"),
-("le nom de famille", "last name");
+("le prénom", "first name");
 
 INSERT INTO english_schema.vocabulary (french_word, english_word) VALUES
+("le nom de famille", "last name"),
 ("l’adresse", "address"),
 ("le pays", "country"),
 ("le lieu de naissance", "place of birth"),
 ("la date de naissance", "date of birth"),
-("la profession", "profession, job"),
+("la profession", "profession"),
 ("l’homme", "man"),
 ("la femme", "woman"),
 ("l’adulte", "adult"),
@@ -174,7 +175,7 @@ INSERT INTO english_schema.vocabulary (french_word, english_word) VALUES
 ("le bus", "bus"),
 ("la voiture", "car"),
 ("le tramway", "tram"),
-("le taxi", "taxi, cab"),
+("le taxi", "taxi"),
 ("le vélo", "bicycle"),
 ("à pied", "on foot"),
 ("la gare", "train station "),
@@ -199,10 +200,10 @@ INSERT INTO english_schema.vocabulary (french_word, english_word) VALUES
 ("voir", "to see"),
 ("être", "to be"),
 ("chercher", "to search"),
-("téléphoner", "to call"),
-("boire", "to drink");
+("téléphoner", "to call");
 
 INSERT INTO english_schema.vocabulary (french_word, english_word) VALUES
+("boire", "to drink"),
 ("savoir", "to know"),
 ("vouloir", "to want"),
 ("payer", "to pay");
