@@ -1,6 +1,9 @@
 from app.datamodel import edit_word
 
-french_word = "le café"
-english_word = "coffee"
+french_word = "le poisson "
+english_word = "fish"
 
-edit_word(french_word, english_word)
+if edit_word(french_word, english_word):
+    print("word edited")
+else:
+    print("mot non trouvé")
