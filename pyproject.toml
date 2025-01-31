@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "english_voc"
+version = "0.1.0"
+description = "A CLI application to manage and quiz vocabulary."
+authors = ["Arthur Moreau <arthur.moreau1996@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+sqlalchemy = "~2.0.34"
+click = "~8.1.8"
+
+[tool.poetry.dev-dependencies]
+# Ajoute ici des dépendances de développement si nécessaire (comme des outils de test par exemple)
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

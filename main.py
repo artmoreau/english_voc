@@ -1,8 +1,7 @@
 import click
 from sqlalchemy.orm import Session
-from database import SessionLocal
-import crud
-import quiz
+from app.database import SessionLocal
+from app import crud, quiz
 
 @click.group()
 def cli():
