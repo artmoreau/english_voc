@@ -1,186 +1,104 @@
-from app.datamodel import (
-    get_random_word,
-    get_words,
-    make_session,
-    reset_learning,
-    reset_session,
-    set_learned,
-)
+import click
+from sqlalchemy.orm import Session
+from database import SessionLocal
+import crud
+import quiz
 
-def quiz():
-    print("Welcome to voc quizz !")
-    print("Press help to list command and 'exit' to leave.\n")
+@click.group()
+def cli():
+    """Command-line interface for managing vocabulary."""
+    pass
 
-    while True:
+@click.command()
+@click.argument('french_word')
+@click.argument('english_word')
+def add_word(french_word, english_word):
+    """
+    Add a new word to the vocabulary.
 
-        user_input = input().strip()
+    Arguments:
+    french_word (str): The word in French that you want to add.
+    english_word (str): The corresponding word in English.
 
-        if user_input.lower() == "help":
-            help()
+    This command adds a new word pair (French -> English) to the vocabulary database.
+    """
+    db: Session = SessionLocal()
+    crud.add_word(db, french_word, english_word)
+    db.close()
+    click.echo(f"Added word: {french_word} -> {english_word}")
 
-        elif user_input.lower() == "new session":
-            make_session()
+@click.command()
+@click.argument('french_word')
+def delete_word(french_word):
+    """
+    Delete a word by its French version.
 
-        elif user_input.lower() == "reset session":
-            main_reset_session()
+    Arguments:
+    french_word (str): The French word to delete from the vocabulary.
 
-        elif user_input.lower() == "random play":
-            random_play()
-
-        elif user_input.lower() == "play session":
-            play_session()
-
-        elif user_input.lower() == "reset learning":
-            reset_learning()
-
-        elif user_input.lower() == "exit":
-            end()
-            break
-
-        else:
-            print("Wrong command, please retry")
-
-
-def help():
-    print("Available command are :\nhelp\nnew session\nreset session\nrandom play\nplay session\nexit")
-
-
-def main_reset_session():
-    session_id = input("Enter the session_id to reset (or press Enter to reset all): ").strip()
-    if session_id:
-        try:
-            session_id = int(session_id)
-        except ValueError:
-            print("Invalid session_id. Please enter a valid integer. Nothing is done")
-        else:
-            reset_session(session_id=session_id)
+    This command removes the given French word and its corresponding English word from the database.
+    """
+    db: Session = SessionLocal()
+    deleted = crud.delete_word_by_french(db, french_word)
+    db.close()
+    if deleted:
+        click.echo(f"Deleted word: {french_word}")
     else:
-        reset_session()
+        click.echo(f"Word not found: {french_word}")
 
+@click.command()
+def create_session():
+    """
+    Assign a new session ID to words without one.
 
-def main_reset_learning():
-    session_id = input("Enter the session_id to reset learned (or press Enter to reset all): ").strip()
-    if session_id:
-        try:
-            session_id = int(session_id)
-        except ValueError:
-            print("Invalid session_id. Please enter a valid integer. Nothing is done")
-        else:
-            reset_learning(session_id=session_id)
-    else:
-        reset_learning()
+    Arguments: None
 
+    This command assigns a new session ID to all words that currently don't have a session ID.
+    It helps group words together for future quiz sessions.
+    """
+    db: Session = SessionLocal()
+    session_id, count = crud.assign_session(db)
+    db.close()
+    click.echo(f"Started session {session_id} with {count} words.")
 
-def random_play():
+@click.command()
+@click.argument('session_id', required=False, type=int)
+def reset_session(session_id):
+    """
+    Reset session IDs to None.
 
-    good_answer = 0
-    bad_answer = 0
-    while True:
-        print("Random play started\n Press 'stop' to stop.\n")
+    Arguments:
+    session_id (int, optional): The session ID to reset. If not provided, all sessions are reset.
 
-        # Obtenir un mot aléatoire
-        word = get_random_word()
-        if not word:
-            print("Database is empty. Add word before play.")
-            break
+    This command removes the session ID from the specified session or all sessions, effectively clearing session associations.
+    """
+    db: Session = SessionLocal()
+    crud.reset_session(db, session_id)
+    db.close()
+    click.echo("Session reset.")
 
-        print(f"Let's translate this : {word.french_word}")
-        word_user_input = input("Your answer : ").strip()
+@click.command()
+@click.argument('session_id', required=False, type=int)
+def start_session(session_id):
+    """
+    Start a quiz session. If no session ID is provided, the latest session is used.
 
-        # Permet de quitter le quiz
-        if word_user_input.lower() == "stop":
-            print("Thanks for playing ! random play ended.")
-            break
+    Arguments:
+    session_id (int, optional): The session ID to start. If not provided, the latest session will be used.
 
-        # Vérification de la réponse
-        if word_user_input.lower() == word.english_word.lower():
-            good_answer += 1
-            set_learned(word, True)
-            print("Great ! 🎉\n")
-        else:
-            bad_answer += 1
-            set_learned(word, False)
-            print(f"Fail. The correct answer was : {word.english_word}.\n")
+    This command starts the quiz session by retrieving the words associated with the given session ID.
+    If no session ID is provided, it will use the most recent session.
+    """
+    db: Session = SessionLocal()
+    quiz.start_quiz(db, session_id)
+    db.close()
 
-
-def play_session():
-    session_id = input("Enter the session_id to play (or press Enter to play last): ").strip()
-    if session_id:
-        try:
-            session_id = int(session_id)
-        except ValueError:
-            print("Invalid session_id. Last session id used")
-            session_id = None
-    else:
-        session_id = None
-
-    session_id, words = get_words(session_id)
-
-    print(f"Playing session with ID: {session_id} Press 'stop' to stop.\n")
-
-    good_answer = 0
-    bad_answer = 0
-    for word in words:
-
-        print(f"Let's translate this : {word.french_word}")
-        word_user_input = input("Your answer : ").strip()
-
-        # Permet de quitter le quiz
-        if word_user_input.lower() == "stop":
-            print("Thanks for playing! Session play ended.")
-            break
-
-        # Vérification de la réponse
-        if word_user_input.lower() == word.english_word.lower():
-            good_answer += 1
-            set_learned(word, True)
-            print("Great! 🎉\n")
-        else:
-            bad_answer += 1
-            set_learned(word, False)
-            print(f"Fail. The correct answer was : {word.english_word}.\n")
-
-    print(f"Session ended with {good_answer}/{good_answer + bad_answer}")
-
-    while bad_answer > 0:
-        print(f"Would you like to retry incorrect words ? press y/yes/nothing or n/no:")
-        user_input = input().strip()
-
-        if user_input.lower() in ("n", "no"):
-            print("Thanks for playing! Session play ended.")
-
-        else:
-            print(f"Restart wrong word")
-            good_answer = 0
-            bad_answer = 0
-
-            session_id, words = get_words(session_id, False)
-
-            for word in words:
-
-                print(f"Let's translate this : {word.french_word}")
-                word_user_input = input("Your answer : ").strip()
-
-                # Permet de quitter le quiz
-                if word_user_input.lower() == "stop":
-                    print("Thanks for playing! Session play ended.")
-                    break
-
-                # Vérification de la réponse
-                if word_user_input.lower() == word.english_word.lower():
-                    good_answer += 1
-                    set_learned(word, True)
-                    print("Great! 🎉\n")
-                else:
-                    bad_answer += 1
-                    set_learned(word, False)
-                    print(f"Fail. The correct answer was : {word.english_word}\n")
-
-            print(f"Session ended with {good_answer}/{good_answer + bad_answer}")
-
-
-def end():
-    print("Thanks for playing ! Bye.")
+# Adding all commands to the CLI
+cli.add_command(add_word)
+cli.add_command(delete_word)
+cli.add_command(create_session)
+cli.add_command(reset_session)
+cli.add_command(start_session)
 
 if __name__ == "__main__":
-    quiz()
+    cli()
